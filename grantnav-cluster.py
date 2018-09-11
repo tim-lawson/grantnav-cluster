@@ -6,7 +6,6 @@ from time import time
 from collections import defaultdict
 from scipy import sparse
 from sklearn.feature_extraction.text import TfidfVectorizer
-# from sklearn.cluster import KMeans
 from spherecluster import SphericalKMeans
 
 # https://stackoverflow.com/questions/31790819/scipy-sparse-csr-matrix-how-to-get-top-ten-values-and-indices
@@ -26,6 +25,7 @@ if __name__ == "__main__":
     n_terms = 10
 
     # Read data from file
+    csv = 'data/grantnav-20180904133708.csv'
     t0 = time()
     grants = pd.read_csv(input_data)
     print('Read data from file in {:.6f}s'.format(time() - t0))
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     # Read pre-trained word embeddings from file
     t0 = time()
-    with open('data\glove.6B.50d.txt', 'rb') as lines:
+    with open('data\glove.6B.100d.txt', 'rb') as lines:
         # Note that map returns an iterator in Python 3
         word2vec = {line.split()[0]: np.array(list(map(float, line.split()[1:])))
                     for line in lines}
@@ -62,11 +62,11 @@ if __name__ == "__main__":
           .format(time() - t0))
 
     # Form document embeddings from average of Tf-idf-weighted word embeddings
-    t0 = time()
     num_docs, num_terms = doc_term_matrix.shape
     doc_embed_matrix = np.zeros((num_docs, dim))
     doc_num_terms = np.zeros(num_docs)
 
+    t0 = time()
     docs, terms = doc_term_matrix.nonzero()
     for doc, term in zip(docs, terms):
         # Inefficient way of calculating the average...
