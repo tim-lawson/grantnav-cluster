@@ -34,4 +34,4 @@ sklearn==0.0
 smart-open==1.6.0
 spherecluster==0.1.6
 toml==0.9.6
-urllib3==1.24.2
+urllib3==1.26.5
